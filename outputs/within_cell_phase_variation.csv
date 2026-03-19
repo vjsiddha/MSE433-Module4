@@ -1,0 +1,10 @@
+phase,mean_within_cell_sd,median_within_cell_sd,mean_within_cell_range,median_within_cell_range
+CASE TIME (Cath In-Out),10.11,7.77,23.55,21.0
+SKIN-SKIN (Access to Cath-Out),9.96,8.33,22.95,21.5
+PT PREP/INTUBATION Pt-In-Access,4.19,3.71,10.1,10.5
+ABL DURATION (Abl Start-End),4.14,4.24,10.3,11.0
+TSP (Min),2.99,2.04,7.45,4.0
+POST CARE/EXTUBATION (Cath-Out to Pt-Out),2.95,2.67,6.75,6.5
+ACCESSS (Min),1.71,1.12,4.05,2.5
+PRE-MAP (Min),0.6,0.58,1.35,1.0
+ABL TIME (Min),0.13,0.0,0.27,0.0

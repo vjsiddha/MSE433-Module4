@@ -1,0 +1,66 @@
+phase_group,linked_metric,micro_step,primary_category
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,patient positioned on table,Room setup
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,nurse final instructions,Communication patterns
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,checklist run-through,Communication patterns
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,anesthesia readiness,Personnel interactions
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,physician safety and goal briefing,Communication patterns
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,mapping and monitoring patches connected,Room setup
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,TEE probe insertion,Equipment handling
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,heart and valve assessment,Imaging and mapping
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,left atrial appendage clot check,Verification and safety
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,Doppler flow confirmation,Verification and safety
+Prep/intubation,PT PREP/INTUBATION Pt-In-Access,technical details completed before access,Handoff or waiting
+Access/setup,ACCESSS (Min),bilateral femoral venous access,Procedural manipulation
+Access/setup,ACCESSS (Min),ultrasound-guided entry,Imaging and mapping
+Access/setup,ACCESSS (Min),sterile field setup,Room setup
+Access/setup,ACCESSS (Min),catheter-to-console electrical planning,Equipment handling
+Access/setup,ACCESSS (Min),cable layout on table,Equipment handling
+Access/setup,ACCESSS (Min),ablation catheter removed and prepped,Equipment handling
+Access/setup,ACCESSS (Min),irrigation function check,Verification and safety
+Access/setup,ACCESSS (Min),mechanical function check,Verification and safety
+Access/setup,ACCESSS (Min),catheter defect check,Verification and safety
+Access/setup,ACCESSS (Min),deflection mechanism check,Verification and safety
+Access/setup,ACCESSS (Min),electrical connection attached,Equipment handling
+Access/setup,ACCESSS (Min),intracardiac echo catheter prepared,Equipment handling
+Access/setup,ACCESSS (Min),transseptal needle prepared,Equipment handling
+Access/setup,ACCESSS (Min),short sheath advanced,Procedural manipulation
+Access/setup,ACCESSS (Min),long transseptal sheaths prepared,Equipment handling
+Access/setup,ACCESSS (Min),coagulation profile monitored,Verification and safety
+Access/setup,ACCESSS (Min),irrigation reconfirmed,Verification and safety
+Access/setup,ACCESSS (Min),coronary sinus catheter advanced,Procedural manipulation
+TSP,TSP (Min),prepare for transseptal catheterization,Handoff or waiting
+TSP,TSP (Min),remove sheath dilator,Equipment handling
+TSP,TSP (Min),flush transseptal sheaths,Equipment handling
+TSP,TSP (Min),maintain continuous saline through sheaths,Equipment handling
+TSP,TSP (Min),recreate right-sided geometry,Imaging and mapping
+TSP,TSP (Min),incorporate coronary sinus landmarks,Imaging and mapping
+TSP,TSP (Min),position additional catheters using map,Procedural manipulation
+TSP,TSP (Min),ICE survey of cardiac structures,Imaging and mapping
+TSP,TSP (Min),confirm no baseline effusion,Verification and safety
+TSP,TSP (Min),perform first transseptal puncture,Procedural manipulation
+TSP,TSP (Min),visualize septal tenting,Imaging and mapping
+TSP,TSP (Min),confirm flight path and orientation,Verification and safety
+TSP,TSP (Min),advance needle across septum,Procedural manipulation
+TSP,TSP (Min),advance sheath and dilator into LA,Procedural manipulation
+TSP,TSP (Min),saline bubble confirmation,Verification and safety
+TSP,TSP (Min),confirm unobstructed left atrial access,Verification and safety
+TSP,TSP (Min),advance ablation catheter into LA,Procedural manipulation
+TSP,TSP (Min),anchor catheter for second puncture,Procedural manipulation
+TSP,TSP (Min),perform second transseptal,Procedural manipulation
+TSP,TSP (Min),advance mapping catheter and confirm final position,Procedural manipulation
+Pre-map,PRE-MAP (Min),manipulate mapping catheter in LA,Procedural manipulation
+Pre-map,PRE-MAP (Min),reproduce left atrial geometry,Imaging and mapping
+Pre-map,PRE-MAP (Min),compare geometry to CT,Imaging and mapping
+Pre-map,PRE-MAP (Min),create chamber and pulmonary vein model,Imaging and mapping
+Pre-map,PRE-MAP (Min),mapping experts guide control-panel work,Personnel interactions
+Pre-map,PRE-MAP (Min),staff guidance during setup completion,Personnel interactions
+Pre-map,PRE-MAP (Min),anesthesia stabilizes patient for ablation start,Handoff or waiting
+Ablation/non-energy work,ablation_non_energy,start ablation sequence,Handoff or waiting
+Ablation/non-energy work,ablation_non_energy,point-by-point lesions around pulmonary veins,Procedural manipulation
+Ablation/non-energy work,ablation_non_energy,continuous echo guidance,Imaging and mapping
+Ablation/non-energy work,ablation_non_energy,continuous electroanatomic map guidance,Imaging and mapping
+Ablation/non-energy work,ablation_non_energy,continuous live electrogram guidance,Imaging and mapping
+Ablation/non-energy work,ablation_non_energy,integrate modalities simultaneously,Communication patterns
+Ablation/non-energy work,ablation_non_energy,add inter-vein lesions when needed,Procedural manipulation
+Ablation/non-energy work,ablation_non_energy,review chamber voltage pattern,Verification and safety
+Ablation/non-energy work,ablation_non_energy,confirm durable pulmonary vein isolation endpoint,Verification and safety
