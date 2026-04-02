@@ -1,0 +1,101 @@
+{
+  "assumption": "Every case has a full transcript annotation stream that is segmented into stages, mapped to microsteps, timestamped, and joined with patient, provider, and clinic context.",
+  "tables": [
+    {
+      "table_name": "variability_cases.csv",
+      "grain": "One row per surgery case",
+      "primary_key": "case_id",
+      "purpose": "Patient, physician, clinic, and process context for each case.",
+      "key_fields": [
+        "case_id",
+        "case_date",
+        "clinic_name",
+        "doctor_name",
+        "age",
+        "bmi",
+        "mobility_limited",
+        "prior_ablation",
+        "anatomy_complexity",
+        "septum_thickness",
+        "planned_lesions",
+        "equipment_issue_count",
+        "total_case_duration_min",
+        "primary_delay_driver"
+      ]
+    },
+    {
+      "table_name": "variability_stage_summary.csv",
+      "grain": "One row per case-stage",
+      "primary_key": "case_id + stage_code",
+      "purpose": "Duration and driver summary for each high-level stage in the procedure.",
+      "key_fields": [
+        "case_id",
+        "stage_code",
+        "stage_name",
+        "stage_order",
+        "stage_start_min",
+        "stage_end_min",
+        "stage_duration_min",
+        "relevant_processes",
+        "primary_delay_driver",
+        "delay_driver_summary"
+      ]
+    },
+    {
+      "table_name": "variability_transcript_annotations.csv",
+      "grain": "One row per transcript microstep segment",
+      "primary_key": "case_id + stage_code + microstep_code + transcript_start_min",
+      "purpose": "Transcript-derived microstep labels, durations, actors, and attributed variability factors.",
+      "key_fields": [
+        "case_id",
+        "stage_code",
+        "stage_name",
+        "microstep_code",
+        "microstep_label",
+        "category",
+        "actor",
+        "transcript_start_min",
+        "transcript_end_min",
+        "duration_min",
+        "transcript_snippet",
+        "inferred_video_event",
+        "primary_delay_driver",
+        "delay_driver_summary"
+      ]
+    },
+    {
+      "table_name": "variability_process_benchmarks.csv",
+      "grain": "One row per process-stage benchmark",
+      "primary_key": "process_flag + stage_code",
+      "purpose": "Estimated timing and reliability benefit of clinic workflow choices.",
+      "key_fields": [
+        "process_flag",
+        "process_label",
+        "stage_code",
+        "stage_name",
+        "filter_name",
+        "cases_with_process",
+        "cases_without_process",
+        "mean_minutes_saved",
+        "sd_reduction_min"
+      ]
+    },
+    {
+      "table_name": "variability_step_rankings.csv",
+      "grain": "One row per microstep type",
+      "primary_key": "microstep_code",
+      "purpose": "Cross-case ranking of the most variable microsteps and their leading causes.",
+      "key_fields": [
+        "microstep_code",
+        "microstep_label",
+        "stage_name",
+        "category",
+        "cases",
+        "mean_duration_min",
+        "sd_duration_min",
+        "cv",
+        "top_delay_drivers"
+      ]
+    }
+  ]
+}

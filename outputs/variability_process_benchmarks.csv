@@ -1,0 +1,6 @@
+process_flag,process_label,stage_code,stage_name,filter_name,cases_with_process,cases_without_process,mean_duration_with_process_min,mean_duration_without_process_min,mean_minutes_saved,sd_with_process_min,sd_without_process_min,sd_reduction_min
+transfer_lift_used,Transfer lift and extra hands,pre_op,Pre-op and positioning,high_transfer_risk,48,31,32.27,36.29,4.02,3.15,3.54,0.39
+closure_checklist,Closure checklist,close,Close and transfer,all,139,41,21.2,23.72,2.51,3.69,3.98,0.29
+mapping_tech_support,Mapping tech support,mapping,Mapping and baseline validation,complex_mapping,90,36,16.64,18.86,2.23,2.04,1.86,-0.18
+ultrasound_access,Ultrasound-first access,access,Access and sheath setup,all,154,26,21.24,23.24,1.99,2.69,2.71,0.02
+standardized_sheath_pack,Standardized sheath pack,tsp,Transseptal puncture,all,117,63,23.65,25.62,1.98,3.86,3.62,-0.23

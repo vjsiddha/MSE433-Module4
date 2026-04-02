@@ -1,0 +1,7 @@
+stage_code,stage_order,stage_name,color,description
+pre_op,1,Pre-op and positioning,#0f766e,"Patient transfer, anesthesia setup, safety imaging, and room preparation."
+access,2,Access and sheath setup,#2563eb,"Groin access, sheath placement, cabling, and irrigation checks."
+tsp,3,Transseptal puncture,#b45309,"ICE-guided septal crossing, sheath exchange, and left atrial entry."
+mapping,4,Mapping and baseline validation,#7c3aed,"Geometry build, map registration, and baseline voltage review."
+ablation,5,Ablation and verification,#dc2626,"Lesion delivery, touch-up maneuvering, and endpoint confirmation."
+close,6,Close and transfer,#475569,"Sheath removal, wake-up, extubation, and transfer off table."

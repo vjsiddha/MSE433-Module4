@@ -1,165 +1,159 @@
 # MSE433-Module4
 
-This project analyzes variability in AF ablation procedure times using a same-doctor, same-`#ABL` design. The main idea is to hold visible workload as constant as possible, measure how much timing variation still remains, and then use a representative transcript of the procedure to explain where that residual variability is most likely coming from.
+This repository now prototypes a higher-level surgical variability solution built around two assumptions:
 
-## Project Goal
+1. Every AF ablation is recorded and transcribed from start to finish.
+2. Those transcripted cases are collected across multiple clinics so variability can be explained at the doctor, stage, step, and clinic level.
 
-We are trying to identify hidden sources of variability in the procedure that are not directly captured by the macro timing columns alone. Examples include communication patterns, personnel interactions, equipment handling, verification work, handoff friction, and waiting.
+The old approach in this repo focused on coding a single representative transcript into hidden categories like communication or tool handling. The new approach treats transcription as a full process-log layer:
 
-The main question is:
+- every transcript segment is mapped to a surgery stage
+- every stage contains named microsteps
+- every microstep is timed
+- the transcript timing is joined with patient, doctor, and clinic context
+- the result feeds a dashboard that explains why variability happens and what process changes are worth recommending
 
-When the same doctor performs cases with the same lesion count, where does the remaining time variation live, and can the transcript help explain it?
+## Proposed Solution
 
-## Main Analysis Approach
+The solution is now framed as a two-stage analytics workflow.
 
-The project uses three layers of analysis:
+### 1. Transcript-to-process layer
 
-1. Overall effect testing
+Assume every procedure video is transcribed and converted into structured annotations:
 
-We first test whether observable factors such as `doctor`, `#ABL`, and `ABL TIME` explain case duration at all. This is done with ANOVA and ANCOVA.
+- `stage`: high-level part of the surgery
+- `microstep`: specific action within that stage
+- `start/end time`: timing for the transcript segment
+- `actor`: who is performing the work
+- `delay driver`: why that segment took longer than expected
 
-2. Same-doctor, same-`#ABL` comparison
+The stage model used in the mock solution is:
 
-This is the main analysis. Cases are grouped by doctor and lesion count so that we can look at within-group variation after holding those two factors fixed. This gives a cleaner view of hidden process variation.
+1. `Pre-op and positioning`
+2. `Access and sheath setup`
+3. `Transseptal puncture`
+4. `Mapping and baseline validation`
+5. `Ablation and verification`
+6. `Close and transfer`
 
-3. Transcript-informed coding
+Within those stages, the mock dataset tracks 21 named microsteps such as:
 
-We use a representative timestamped procedure transcript as a process map. The transcript is not from one of the surgeries in the dataset, so it is not used for direct timing matching. Instead, we code its micro-steps into hidden-variability categories and map them to the macro phases in the timing data.
+- `Patient transfer and positioning`
+- `Venous access and sheath insertion`
+- `First transseptal crossing`
+- `Left atrial geometry build`
+- `Lesion set delivery`
+- `Wake-up and extubation`
 
-## Transcript Coding Approach
+### 2. Cross-case variability layer
 
-Each timestamped action in the representative transcript was coded as a `micro-step` and assigned to a primary hidden-variability category. The coded categories are:
+Assume those annotated cases are collected across doctors and clinics. The dashboard then shows:
 
-- `Communication patterns`
-- `Personnel interactions`
-- `Equipment handling`
-- `Room setup`
-- `Procedural manipulation`
-- `Imaging and mapping`
-- `Verification and safety`
-- `Handoff or waiting`
+- doctor-by-doctor stage duration and variability
+- the microsteps with the highest spread across cases
+- the likely reasons for that variability, such as obesity, mobility limits, thick septum, prior ablation scar, or equipment issues
+- clinic-by-clinic process signatures
+- recommendations for which clinic workflows appear faster and more reliable and should be standardized
 
-These coded micro-steps were then mapped into the macro phases used in the case dataset:
+## Data Store Framework
 
-- `PT PREP/INTUBATION`
-- `ACCESS`
-- `TSP`
-- `PRE-MAP`
-- `ABL DURATION / ABL TIME`
-- `POST CARE / EXTUBATION`
+The mock pipeline writes the following core tables:
 
-This gives an interpretation layer for the timing results. It does not prove exact causal time allocation for any individual case, but it helps explain why some phases are more variable than others.
+- `variability_cases.csv`: one row per surgery case with patient, doctor, clinic, and process context
+- `variability_stage_summary.csv`: one row per case-stage with stage duration and summarized drivers
+- `variability_transcript_annotations.csv`: one row per transcript microstep segment with start/end times and delay explanations
+- `variability_process_benchmarks.csv`: estimated benefit of workflow choices such as transfer lifts, ultrasound-first access, or closure checklists
+- `variability_step_rankings.csv`: ranked list of the most variable microsteps
+- `variability_schema.json`: machine-readable description of the storage model
 
-## Overall Process
+In other words, the transcription output is no longer just a qualitative coding aid. It becomes a structured event store that can support benchmarking and recommendation.
 
-The analysis workflow is:
+## Mock Dataset Design
 
-1. Load and clean the case workbook.
-2. Restrict to standard cases used for comparison.
-3. Run ANOVA/ANCOVA to test whether `doctor`, `#ABL`, and `ABL TIME` explain overall case time.
-4. Group cases by same doctor and same `#ABL`.
-5. Measure within-cell variation for each macro phase.
-6. Code the representative transcript into micro-steps and hidden-variability categories.
-7. Map transcript-coded micro-steps to macro phases.
-8. Compare transcript phase complexity to observed within-cell variability.
+The synthetic dataset currently generated by the repo includes:
 
-## Main Findings
+- `180` mock cases
+- `3` clinics
+- `6` doctors
+- `6` high-level stages per case
+- `21` timed microsteps per case
 
-### 1. Doctor matters overall
+The mock cases include factors such as:
 
-In the case-time ANCOVA, `doctor` remains statistically significant even after controlling for `#ABL` and `ABL TIME`:
+- age
+- BMI and obesity class
+- mobility limitation
+- prior ablation
+- anatomy complexity
+- septum thickness
+- planned lesion count
+- equipment issue count
 
-- `C(PHYSICIAN)` p-value: `0.000319`
+The mock clinics also differ in workflow adoption, including:
 
-By contrast:
+- transfer lift and extra hands
+- dedicated runner
+- ultrasound-first access
+- standardized sheath pack
+- ICE-first transseptal workflow
+- mapping tech support
+- closure checklist
 
-- `#ABL` p-value: `0.097038`
-- `ABL TIME` p-value: `0.296102`
+## Dashboard Output
 
-This suggests provider-level differences remain important even after accounting for visible workload.
+The generated dashboard is a standalone HTML file:
 
-### 2. Large residual variation remains even within same-doctor, same-`#ABL` groups
+- [variability_dashboard.html](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_dashboard.html)
 
-Across repeated doctor-`#ABL` cells, there is still substantial within-group variation:
+There is also a separate Streamlit dashboard:
 
-- `CASE TIME` mean within-cell SD: `10.11` min
-- `SKIN-SKIN` mean within-cell SD: `9.96` min
-- `PT PREP/INTUBATION` mean within-cell SD: `4.19` min
-- `ABL DURATION` mean within-cell SD: `4.14` min
-- `TSP` mean within-cell SD: `2.99` min
-- `POST CARE / EXTUBATION` mean within-cell SD: `2.95` min
-- `ACCESS` mean within-cell SD: `1.71` min
-- `PRE-MAP` mean within-cell SD: `0.60` min
-- `ABL TIME` mean within-cell SD: `0.13` min
+- [streamlit_app.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/streamlit_app.py)
 
-The most important pattern is that `ABL TIME` barely varies once doctor and lesion count are held fixed, while surrounding phases still vary a lot. That implies the main variability is not the active pulse-on treatment itself, but the process wrapped around it.
+It is backed by these generated files:
 
-### 3. The transcript supports where that hidden variation likely lives
+- [variability_dashboard_data.json](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_dashboard_data.json)
+- [variability_cases.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_cases.csv)
+- [variability_stage_summary.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_stage_summary.csv)
+- [variability_transcript_annotations.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_transcript_annotations.csv)
+- [variability_process_benchmarks.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_process_benchmarks.csv)
+- [variability_step_rankings.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_step_rankings.csv)
+- [variability_schema.json](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/variability_schema.json)
 
-The coded transcript shows that the densest macro phases are:
+The dashboard is designed to answer the exact questions in the revised proposal:
 
-- `TSP`: `20` coded micro-steps
-- `ACCESS/setup`: `18` coded micro-steps
-- `Prep/intubation`: `11` coded micro-steps
-- `Ablation/non-energy work`: `9` coded micro-steps
-- `Pre-map`: `7` coded micro-steps
+- Which doctors spend more time in each stage?
+- Which stages are most variable for each doctor?
+- Which microsteps vary the most across cases?
+- What factors appear to explain that variability?
+- Which clinic processes appear to make stages faster or more reliable?
+- What should other clinics adopt as a recommendation?
 
-Category totals across the full representative transcript are:
+## Main Scripts
 
-- `Verification and safety`: `14`
-- `Procedural manipulation`: `14`
-- `Imaging and mapping`: `12`
-- `Equipment handling`: `11`
-- `Communication patterns`: `4`
-- `Handoff or waiting`: `4`
-- `Room setup`: `3`
-- `Personnel interactions`: `3`
+The new solution is driven by two scripts:
 
-This aligns reasonably well with the timing results:
+- [variability_data.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/variability_data.py): stage taxonomy, microstep library, synthetic case generation, and output tables
+- [build_variability_dashboard.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/build_variability_dashboard.py): dashboard summaries, recommendations, JSON payload, and standalone HTML build
+- [streamlit_app.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/streamlit_app.py): compact interactive dashboard for clinic comparison, timeline replay, driver detection, root-cause drilldown, and ideal workflow comparison
 
-- `TSP` is both transcript-dense and meaningfully variable.
-- `Prep/intubation` also has substantial variability and contains multiple setup, communication, and verification micro-steps.
-- `ABL DURATION` is variable even though `ABL TIME` is not, which supports the idea that repositioning, imaging, verification, and non-energy procedural work are important.
-- `ACCESS` looks complex in the transcript, but it is less variable in the timed data, which suggests some of that work is routinized or absorbed into nearby phases.
+Legacy files from the earlier same-doctor same-`#ABL` analysis are still in the repository, but they are no longer the main proposed solution.
 
-## Interpretation
+## How To Rebuild
 
-The main interpretation is:
-
-Once `doctor` and `#ABL` are held fixed, a large amount of procedural variation still remains, and that remaining variation is concentrated in macro phases that contain many micro-steps tied to manipulation, imaging, verification, setup, and coordination.
-
-In other words, the data supports a hidden-variability story. The largest differences across otherwise similar cases do not appear to come from the active ablation energy time itself. They appear to come from the surrounding process needed to prepare, position, verify, coordinate, and complete the procedure.
-
-This is exactly where the transcript is useful. It helps explain what is operationally happening inside the macro phases that remain variable in the timing data.
-
-## Repository Contents
-
-- [same_doctor_same_abl_analysis.ipynb](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/notebooks/same_doctor_same_abl_analysis.ipynb): main notebook with analysis, results, and interpretation
-- [data_utils.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/data_utils.py): shared data loading and cleaning helpers
-- [doctor_abl_variation_analysis.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/doctor_abl_variation_analysis.py): ANOVA/ANCOVA and same-doctor same-`#ABL` variation analysis
-- [transcript_macro_analysis.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/transcript_macro_analysis.py): transcript coding and macro-phase mapping
-- [build_same_doctor_same_abl_notebook.py](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/scripts/build_same_doctor_same_abl_notebook.py): notebook generation script
-
-Key generated outputs:
-
-- [case_time_ancova.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/case_time_ancova.csv)
-- [phase_effect_anova.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/phase_effect_anova.csv)
-- [doctor_abl_cell_summary.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/doctor_abl_cell_summary.csv)
-- [within_cell_phase_variation.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/within_cell_phase_variation.csv)
-- [transcript_micro_step_coding.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/transcript_micro_step_coding.csv)
-- [transcript_phase_summary.csv](/Users/benfogerty/Desktop/MSCI433Case4/MSE433-Module4/outputs/transcript_phase_summary.csv)
-
-## How To Reproduce
-
-Run the scripts in this order from the repository root:
+From the repository root:
 
 ```bash
-./.venv/bin/python scripts/transcript_macro_analysis.py
-./.venv/bin/python scripts/doctor_abl_variation_analysis.py
-./.venv/bin/python scripts/build_same_doctor_same_abl_notebook.py
-./.venv/bin/jupyter nbconvert --to notebook --execute --inplace notebooks/same_doctor_same_abl_analysis.ipynb
+./.venv/bin/python scripts/build_variability_dashboard.py
 ```
 
-## Important Limitation
+That single command regenerates the mock data tables, schema file, dashboard payload, and dashboard HTML.
 
-The transcript is a representative process description, not one of the timed cases in the dataset. That means the transcript is used to interpret the structure of the work inside each macro phase, not to assign exact transcript seconds to exact case-level delays.
+To run the Streamlit dashboard:
+
+```bash
+./.venv/bin/streamlit run streamlit_app.py
+```
+
+## Important Assumption
+
+This is still a mock solution, not a production transcript pipeline. The generated cases and recommendations are synthetic, but the structure is meant to match how a real implementation would store transcript annotations and explain variability once actual multi-clinic procedure data is available.
