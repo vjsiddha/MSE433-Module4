@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 
-TRANSCRIPT_PATH = ROOT / "Procedure_Transcript.txt"
+TRANSCRIPT_PATH = ROOT / "data" / "Procedure_Transcript.txt"
 OUTPUT_DIR = ROOT / "outputs"
 
 
