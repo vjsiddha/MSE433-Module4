@@ -35,19 +35,6 @@ pip install -r requirements.txt
 
 ---
 
-## Run the Streamlit interface
-
-Always run from the **repository root** so imports resolve:
-
-```bash
-source .venv/bin/activate
-streamlit run apps/streamlit_app.py
-```
-
-The app calls `write_mock_outputs()` on load, so it refreshes mock CSVs under `outputs/` when you use it.
-
----
-
 ## Run the analysis scripts
 
 All commands assume the repository root as the current directory.
@@ -58,6 +45,10 @@ Regenerates mock tables, `variability_schema.json`, dashboard JSON payload, and 
 
 ```bash
 python scripts/build_variability_dashboard.py
+```
+
+```
+open outputs/variability_dashboard.html
 ```
 
 Open `outputs/variability_dashboard.html` in a browser.
